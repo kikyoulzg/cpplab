@@ -1,0 +1,479 @@
+﻿这里,记录一些我的想法.
+
+* 信息化时代的知识如何有效记录保存(特指个人的知识,最优秀的属于全人类的知识不考虑,那种东西自然会被妥当保存的)
+
+1.最牛逼的办法,教给别人,也就是传道受业.
+2.最可靠的办法,写在纸(实体)上然后有效保管,毕竟这一做法人类用了千年(不过天灾人祸就没办法了)
+3.目前流行的办法,把数据保存在电子存储器里(这个要注意数据迁移,毕竟技术老是变的,存储设备不可能一直不变,软硬件无关性越高越好,读取难度越低越好.)
+
+
+
+
+当然,我觉得我还没什么值得教给别人的:)
+最核心最重要的数据,写在纸上然后有效保管.最好有几个可以信任的人知道
+次要的,放在本地的存储器上,备份到服务器上.(可以不止一个,都以当时最流行通用的设备存储),天朝的环境可以
+一套在国内服务器，然后一个副本放国外服务器
+
+
+
+* 知识过时
+百科的很多内容都是过时或者不适用于Debian系发行版的。
+Debian系的网路配置文件位于/etc/network/interfaces中，语法也和RH系的/etc/sysconfig/network-scrips不同。
+另外，现在一般都用NM守护进程或systemd接管底层的网络服务，几乎不再需要手写配置文件了。
+
+* 系统假死后的安全处理
+
+SysRq 键组合可以由 Linux 内核解释，使用户能够在不受系统状态的影响（除 kernel panic 或 kernel 假死）下达各种底层命令。它常用来从 X-server 假死的状态下恢复或是在不损坏文件系统的前提下重新启动系统。
+安全重启
+
+在遇到系统假死后且其他方法都不奏效的时候，此方法在想要不损坏硬盘设备或丢失数据的前提下尽量完好重新启动时非常有用。 在系统假死时，可以简单地按下:
+Alt+SysRq+R+S+E+I+U+B
+记住斜体部分的键要在按接下来的键序列时一直按住，且接下来的几个键都要稍按按住一会儿再接着按下一个键，这样它们代表的动作都会正确执行（比如，按住 R 键 1-2 秒再接着按后面的 S 键）。如果该键序列开始并不奏效，那么就延长序列中每个按键的间隔时间再试一次。
+如果有谁需要一个记住该组合键的好方法，只需记住“Raising Skinny Elephants Is Utterly Boring（举起瘦得皮包骨头似的大象真是无聊至极）”
+安全关机
+
+完成这个目的使用的键序列与重新启动除最后一个键外没有区别，按键如下：
+Alt+SysRq+R+S+E+I+U+O
+记住与之前相同，斜体部分的键要在按接下来的键序列时一直按住，且接下来的几个键都要稍按按住一会儿再接着按下一个键，这样它们代表的动作都会正确执行。
+下面是对上述按键行为的详细描述：
+Raw (从 X 取回对键盘的控制)
+tErminate (结束 Nice 值为 -15 的程序，使其正常终止)
+kIll (kill -9 unterminated programs 结束 Nice 值为 -9 的未终止程序)
+Sync (将数据刷新到磁盘)
+Unmount (全部重新挂载为只读)
+reBoot（重新启动，相当于冷重启）
+Off （通过 ACPI 或在旧系统中通过 APM 关闭系统。如“B”键一样，这个键相当于冷关机
+
+* 马丹,突然觉得日常开着半角对编程是有好处的...23333    ctrl+.
+
+* 交换capslock和ctrl建后大小写切换提示就没有了这个注销后有时会失效...怎么恢复原样来着
+ gsettings set com.deepin.dde.keybinding.mediakey capslock "[]"
+gsettings set com.deepin.dde.keyboard layout-options "['ctrl:swapcaps']"
+
+* 大端法直观小端法直感
+* 图灵完备性:具有无限存储能力的通用物理机器或编程语言
+* wayland 和flatpak这两个项目可以研究研究
+* 缺少庫的時候apt install apt-file  apt-file update apt-file search 包名 哪個切合都高下哪個
+emacs替换replace-string
+* export ALL_PROXY=socks5://127.0.0.1:1080 开了ss后用这个命令终端就可以科学上网了
+* this is sth about git
+git clone , git add , git commit , git push
+git remote -v
+cd remacs
+git remote add rekols https://github.com/rekols/remacs
+ git fetch rekols master:develop
+git diff develop
+git merge develop
+
+* 2018年中国大陆可用翻墙方法：ss+pac，vpn，tor，v2ray
+* 屏蔽启动信息 /etc/sysctl.d/20-quiet-printk.conf  可以cat /proc/sys/kernel/printk查看默认级别
+参考kernelloglevel
+* systemctl status systemd-modules-load.service 
+journalctl - b _PID=409
+
+* 3.14表示成单精度浮点数：
+3的二进制：11
+0.14的二进制：0.0010001111010111000010[10001111.....]
+所以3.14的二进制：11.0010001111010111000010[10001111.....]
+正规化：1.10010001111010111000010[10001111.....] * 2^1
+舍入后：1.10010001111010111000011 * 2^1
+因为指数为1，加移码127后为128，128的二进制：1000 0000
+
+    符号位：0（表示正数）
+    指数位：1000 0000
+    尾数位:10010001111010111000011
+3.14的单精度浮点数：0 10000000 (1)10010001111010111000011
+
+* 再提醒一次，查 mode 的正式名稱最快的方式：
+       C-h v major-mode 可以查詢目前 buffer 下 major mode 的正式名稱
+        C-h v minor-mode-list 查詢目前 buffer 下所有啟動的 minor mode 的正式名稱
+* 软件版本回滚 pacman -U /var/cache/pacman/pkg/package-old_version.pkg.tar.xz
+* "d2667afa3535766b7382e39407cc666630dc793b"github token
+* sudo adb devices(adb push 魔夜 /storage/1BFD-1F08)
+* 初始化git仓库 
+echo "# MJC" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/kikyoulzg/MJC.git
+git push -u origin master
+
+* 关于fstab
+在 /etc/fstab配置文件中你可以以三种不同的方法表示文件系统：
+内核名称、UUID 或者 label。
+使用 UUID 或是 label 的好处在于它们与磁盘顺序无关。
+如果你在 BIOS 中改变了你的存储设备顺序，或是重新拔插了存储设备，或是因为一些 BIOS
+可能会随机地改变存储设备的顺序，那么用 UUID 或是 label 来表示将更有效。
+* 四年一闰，百年不闰，四百年再闰。 例如，2000年是闰年，2100年则是平年(闰年就是一年366天,即是在二月多加一天)
+return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+* dd制作启动盘例子： sudo dd if=~/home/bibi/Ubuntu_15_10_64.iso of=/dev/sdb 
+* aria2 下载：- s （2~5）多段下载 - c 断点下载  还可以下bt资源哦
+* inxi -F 查看电脑的基本信息
+* 光刻技术哪家强，荷兰阿斯麦（asml）
+* 取余，遵循尽可能让商大的原则
+    取模，遵循尽可能让商小的原则
+
+* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>from MJC/Q.org<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+* 前者可以少搞一个变量
+** int main(void)
+{
+	int i;
+	int x[7];					/* int[7] 数组 */
+
+	for (i = 0; i < 7; i++) {	/* 输入元素的值 */
+		printf("x[%d] : ", i);
+		scanf("%d", &x[i]);
+	}
+
+	for (i = 0; i < 3; i++) {	/* 对数组元素进行倒序排列 */
+		x[i]=x[i]+x[6-i];
+        x[6-i]=x[i]-x[6-i];
+        x[i]=x[i]-x[6-i];
+	}
+
+	puts("倒序排列了。");
+	for (i = 0; i < 7; i++)		/* 显示元素的值 */
+		printf("x[%d] = %d\n", i, x[i]);
+
+	return 0;
+}
+
+
+** int main(void)
+{
+	int i;
+	int x[7];					/* int[7] 数组 */
+
+	for (i = 0; i < 7; i++) {	/* 输入元素的值 */
+		printf("x[%d] : ", i);
+		scanf("%d", &x[i]);
+	}
+
+	for (i = 0; i < 3; i++) {	/* 对数组元素进行倒序排列 */
+		int temp = x[i];
+		x[i]     = x[6 - i];
+		x[6 - i] = temp;
+	}
+
+	puts("倒序排列了。");
+	for (i = 0; i < 7; i++)		/* 显示元素的值 */
+		printf("x[%d] = %d\n", i, x[i]);
+
+	return 0;
+}
+
+* diff = (n1 > n2) ? n1 - n2 : n2 - n1; //这种写法好
+* char *p[]   = {"PAUL", "X", "MAC"};
+  这里的*p[]是啥。。。。？指针？数组？(指针数组)
+
+* const 修饰符？(const在C语言中算是一个比较新的描述符，我们称之为常量修饰符，即就是说其所修饰的对象为常量。
+当你代码中想要设法阻止一个变量被改变，那么这个时候可以选择使用const关键字。在你给一个变量加上const修饰符
+的同时，通常需要对它进行初始化，在之后的程序中就不能再去改变它。)
+
+* 结构控制，流程控制，数组，函数，字符串，数据类型，指针，结构体，文件处理
+* 计算行列式的值，要bool类型的可以直接用stdbool.h~\(≧▽≦)/~啦啦啦（c99）
+#include <malloc.h>
+#include <stdio.h>
+#include <stdlib.h>             /*头文件*/
+#include <stdbool.h>
+                                  
+int * c,                       
+      n = 0,                  
+      a,                         
+      sum = 0;             
+int aq(int a)           /*aq计算阶乘*/              
+{
+    int s = 1;
+    for(int i = 1; i <= a; i ++)
+          s *= i;
+    return s;
+}
+void swap(int * a, int * b)         /*swap利用地址传递交换两个数的值*/
+{
+    int m =* a;
+    * a = * b;
+    *b = m;
+}
+bool sa(int * l)            /*sa计算在行列式计算过程中每一项前边的符号是正还是负*/
+{
+    int n = 0;
+    for(int i = 0; i < a-1; i ++)
+         for(int j = i+1; j < a; j++)
+               if(l[i]>l[j])n++;
+    if(n % 2 == 0) return false;
+    return true;
+}
+void perm(int * l,int k,int m)          /*perm整个程序里边的核心函数，找出在不同行不同列的所有组合*/
+{
+    int i, s = 1;
+    if(k > m)
+    {
+        n++;            //递归次数//
+        for(int j = 0; j < a; j ++)
+              s *= c[ l[ j ] + a * j ];
+        if( sa( l ) ) s*=-1;
+      
+        printf("%5d      完成度：%2.2f%%\n", sum+=s , n/( aq( a ) * 0.1 ) * 10 );
+    }
+    else            //全排列问题//
+    {
+        for(i = k; i <= m; i++)
+        {
+            swap(l + k, l + i);
+            perm(l, k + 1, m);
+            swap(l + k, l + i);
+        }
+    }
+}
+/*---------------------------------------------------------------*/
+void main()
+{
+    int * b,
+    i, 
+    f, 
+    e;
+    system("color 3e");
+u: system("cls");
+    printf("请输入行列式的阶数：\n");
+    scanf("%d", &a);//获取行列式的阶数
+    b = ( int * ) malloc ( sizeof ( int ) * a );            /*malloc*/
+    c = ( int * ) malloc ( sizeof ( int ) * a * a );
+    for( i = 0; i < a; i++)
+         * ( b + i ) = i;
+    for( i = 0; i < a * a; i++)
+    {
+        if( i % a == 0 )
+            printf("请依次输入行列式中第%d行的值（以空格分隔）：\n",i / a + 1 );
+        scanf("%d", c + i );
+    }
+    printf("\n\n");
+    perm( b, 0, a - 1 );            /*计算行列式的值*/
+    printf("\n行列式展开式共有%d项\n", aq( a ) );
+    if ( a % 2 != 0 ) f = a + 1;
+        else f = a;
+    for( i = 0; i < a * a; i ++ )
+    {       
+        if ( i / a + 1 == f / 2 && i % a == 0) 
+            printf("D = ");//输出“D = ”
+        else if ( i % a == 0) 
+                    printf("    ");
+        if ( i % a == 0) 
+            printf("┃");
+        if ( ( i + 1 ) % a == 0) 
+            printf("%2d", * ( c + i ) );
+        else printf("%2d ", * ( c + i ) );
+        if ( ( i + 1 ) % a == 0 ) 
+            printf("┃");
+        if ( ( i + 1 ) / a == f / 2 && ( i + 1 ) % a == 0) 
+            printf(" = %d\n",sum);
+        else if ( ( i + 1 ) % a == 0 ) 
+                    printf("\n");
+    }
+    printf("\n\n");
+    printf("是否继续？（ 1 / 0 ）\n");
+    scanf("%d", &e);
+    n = 0;
+    if( e ==1 ) goto u;
+    else if ( e == 0 ) exit( 0 );
+}
+
+
+* 大端法直观小端法直感
+* 系统假死后的安全处理
+
+SysRq 键组合可以由 Linux 内核解释，使用户能够在不受系统状态的影响（除 kernel panic 或 kernel 假死）下达各种底层命令。它常用来从 X-server 假死的状态下恢复或是在不损坏文件系统的前提下重新启动系统。
+安全重启
+
+在遇到系统假死后且其他方法都不奏效的时候，此方法在想要不损坏硬盘设备或丢失数据的前提下尽量完好重新启动时非常有用。 在系统假死时，可以简单地按下:
+Alt+SysRq+R+S+E+I+U+B
+记住斜体部分的键要在按接下来的键序列时一直按住，且接下来的几个键都要稍按按住一会儿再接着按下一个键，这样它们代表的动作都会正确执行（比如，按住 R 键 1-2 秒再接着按后面的 S 键）。如果该键序列开始并不奏效，那么就延长序列中每个按键的间隔时间再试一次。
+如果有谁需要一个记住该组合键的好方法，只需记住“Raising Skinny Elephants Is Utterly Boring（举起瘦得皮包骨头似的大象真是无聊至极）”
+安全关机
+
+完成这个目的使用的键序列与重新启动除最后一个键外没有区别，按键如下：
+Alt+SysRq+R+S+E+I+U+O
+记住与之前相同，斜体部分的键要在按接下来的键序列时一直按住，且接下来的几个键都要稍按按住一会儿再接着按下一个键，这样它们代表的动作都会正确执行。
+下面是对上述按键行为的详细描述：
+Raw (从 X 取回对键盘的控制)
+tErminate (结束 Nice 值为 -15 的程序，使其正常终止)
+kIll (kill -9 unterminated programs 结束 Nice 值为 -9 的未终止程序)
+Sync (将数据刷新到磁盘)
+Unmount (全部重新挂载为只读)
+reBoot（重新启动，相当于冷重启）
+Off （通过 ACPI 或在旧系统中通过 APM 关闭系统。如“B”键一样，这个键相当于冷关机
+* 真正了不起的程序员对自己的程序的每一个字节都了如指掌
+* 可见函数内的i优先度高于全局变量
+static int i=1;
+int main(){
+  int i=2;
+  printf("%d",i);
+  return 0;
+}
+输出结果是2
+
+* 等待x毫秒
+int sleep(unsigned long x)
+{
+clock_t c1 =clock(),c2;
+do{
+if((c2=clock())==(clock_t)-1)
+return0;
+}
+while (1000.0 * (c2-c1)/clocks_pre_sec <x);
+return 1;
+}
+
+* 要得到0~a的随机数x
+srand(time(null))
+x=rand()%(a+1)
+要得到a~b的随机数y
+y=a+rand()%(b-a+1)
+* 可见c语言不是所谓的 dynamic scoping ,dynamic scoping 就是说，
+如果你的函数定义里面有“自由变量”，那么这个自由变量的值，会随着函数的“调用位置”的不同而发生变化。
+#include <stdio.h>
+
+int plus(int y)
+{
+    int x=1;
+    int k=x+y;
+    printf("%d\n",k );
+}
+    
+
+int main()
+{
+    int x;
+    x=100;
+    plus(3);
+    return 0;
+}
+* for (i=0;i<4;i++){
+        if (!isdigit(x[i]))
+            putchar ('2');
+    for(j=0;j<i;j++)
+        if(x[i]==x[j])
+            putchar('3');
+    }
+
+和
+
+ for (i=0;i<4;i++)
+        if (!isdigit(x[i]))
+            putchar ('2');
+    for(j=0;j<i;j++)
+        if(x[i]==x[j])
+            putchar('3');
+    
+不一样
+
+* 数据类型很重要
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+int main()
+{
+    double x;
+    x=(double)180/262;
+    printf("%lf\n",x );
+    return 0;
+
+}
+
+* struct(结构体):
+一般格式:
+struct 结构名 //可以没有结构名
+{
+类型 变量名;
+类型 变量名;
+.......
+}结构变量;
+
+结构数组的访问 结构数组元素.成员名
+结构指针的访问 结构体指针名->成员名
+
+* 使用了math.h头文件要加lm参数，l是链接的意思(gcc -o shiyan shiyan.c -lm)
+在看一个可执行文件用了什么库的时候可以用ldd命令
+#include <stdio.h>
+#include <math.h>
+
+
+int main()
+{
+    int a,b,c;
+    for (a = 1; a <= 9; a++) {
+        for (b = 0; b <= 9; b++){
+            for (c = 0; c <= 9; c++){
+                if (a * 100 + b * 10 + c == pow(a, 3) + pow(b, 3) + pow(c, 3)){
+                    printf("%d%d%d\n",a,b,c );
+                   
+                }
+            }
+        }
+    }
+    
+    return 0;
+    
+    }
+
+* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 读程序员的自我修养的笔记<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+* 基础
+** 分层的思想
+并发性 多线程   同步 并发 锁
+mmu内存管理单元
+thread线程
+pthread库
+synchronization同步
+lock锁
+可重入
+是否存在可移植的阻止乱序的方法
+看来 .intel_syntax 指令可以让我在gas汇编使用intel语法
+** 有一个gnu的包叫binutilfs,很强
+mdzz<<程序员的自我修养>>里p91 里extern "C" double _ZN6myname3varE;里的_去掉才对,至少2018年也就是目前linux下gcc对c语言的符号修饰是不用加_的 
+**  ABI(二进制) API(源代码)
+** <<LSB手册>>,dynsym动态符号表,dynstr动态符号字符串表 
+** 概览 
+gcc hello.c -o hello  --> 预编译+编译(/usr/lib/gcc/i486-linux-gnu/4.1/ccl hello.c > hello.s)
+                      
+                      --> 汇编(as hello.s -o hello)
+                      
+		      --> 链接(ld)
+
+预编译-->编译-->汇编(生成目标文件)-->链接(地址空间分配，符号决议，重定位)
+        |     
+        前端(词法扫描器lex,语法分析器yacc,语义分析)
+        |
+        后端(源代码优化,目标代码优化)
+
+scanner(lex)(token)词法分析/扫描
+parser(yacc)(syntax)语法分析
+semantic analyzer 语义分析
+
+* elf文件类型 
+可重定位relocatable,可执行文件executable,共享目标文件shared object,核心转储coredump
+file查看文件格式,objdump,size查看elf文件的代码段/数据段/BSS段,objcopy(自定义段)
+ELF文件结构:elf文件头(/usr/include/elf.h,readelf -h 查看elf文件头,readelf -S 查看段表),重定位表,字符串表,符号表(readelf -s)
+链接的接口"符号":特殊符号,符号修饰,extern "c" ,强符号弱符号
+objdump -s -d:打印段内容，反汇编
+strip去掉调试信息
+
+* 静态链接 
+空间与地址分配(虚拟地址 空间的分配),符号解析与重定位☆,common块☆,c++相关问题,静态库链接,连接过程控制☆,BFD库
+ld a.o b.o -e main -o ab(-e指定程序入口),objdump -d a.o反汇编,objdump -r a.o重定位表,readelf -s a.o 符号表,
+gcc -ffunction -sections,gcc -fdata -sections(保持到独立的段)
+/usr/lib/libc.a
+ar -t libc.a(库里包含什么目标文件) ar -x (解压)  gcc --verbose (中间步骤)
+链接控制脚本:ld --verbose 查看脚本 /usr/lib/ldscripts,ld -T 自己控制脚本
+BFD库(软件包binutils-dev)
+* DSO动态共享对象
+c语言库的运行库glibc的动态链接形式版本是/lib/libc.so
+readwlf -L lib.so查看lib.so的装载属性
+readelf -d foo.so | grep TEXTREL 区分一个DSO是否为PIC
+readelf -d lib.so 段内容
+ldd program1 查看一个程序主模块依赖于哪些共享库
+readelf -sD lib.so查看动态符号表以及哈希表
+readelf -r lib.so -S lib.so 查看动态链接文件的重定位表
+重定位的方法☆
+gcc -shared readelf -r lib.so不使用PIC的方法编译
+PIC(地址无关变量)
+* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

@@ -1,0 +1,249 @@
+#这是使用c++的一些记录
+
+C:结构控制，流程控制，数组，函数，字符串，数据类型，指针，结构体，文件处理
+C++: 基础：：类型（声明，定义），指针 数组 结构，函数，命名空间
+     抽象机制：：类，运算符重载，派生类，模板，异常处理，类层次结构，访问控制
+     标准库：：标准库，容器，向量，标准容器，算法和函数对象，迭代器和分配器，串，流，数值
+
+
+关键字extern是说明一个声明只是一个声明，而不是一个定义，如果出现初始式就简单的忽略extern
+因为有初始的声明就是定义
+
+关键字const声明常量
+关键字typedef是为类型声明一个新名字
+上面这两货都拥有内部连接
+
+为了避免混乱不要随意使用关键字static，除非在函数和类的内部
+
+#ifdef _xxx
+#endif
+
+单一定义规则(odr)就是说,一个类,模板或者在线函数的两个定义能够被接受为同一个唯一定义的实例.当且仅当它们出现在不同编译单位
+里,它们按照一个个单词对应相同,这些单词在两个编译单位里的意义也完全一样,odr认为这个是合法的,为两个源文件里引用了同一个类
+(然而这样做似乎不好)
+
+关键字export的意思是在其他的编译单位可以访问(导出的模板了解一下)
+
+可以用extern声明中给出有关的链接约定,extern "C" {.....}叫链接块
+
+
+(x?y:z)x成立吗,成立执行y,不成立执行z
+
+
+斐波那契  线性反馈移位寄存器 MersenneTwister算法
+
+/*
+ * common.h
+ *
+ *  Created on: 2009-1-7
+ *      Author: Argon.Sun
+ */
+好看的注释
+
+类
+class abc{
+public: //共有访问权限
+abc(); //构造函数(完成对象的初始化)
+abc(const abc &c);  //复制构造函数(用已有对象初始化新对象,函数参数为类类型,返回值为类类型时用到)
+~abc(); //析构函数(在对象消失时释放分配给对象的内存空间)
+void a(); //成员函数声明
+private: //私有访问权限
+int b;
+};
+
+abc::abc(const abc &c){} 
+void abc::a(){} //类外定义成员函数要加abc::限定
+abc x1; //用abc类定义对象x1
+x1.a; //通过对象名调用成员函数
+abc *pstu = &x1; //定义指向对象的指针
+pstu -> a(); //通过对象指针调用成员函数
+abc x2(x1);建立对象x2并用x1初始化
+
+复制构造函数调用的三种情况
+#include <iostream>
+using namespace std;
+
+class Date
+{ public:
+Date(int y=2012,int m=1,int d=1);
+Date(const Date &d);
+void set(int y, int m, int d);
+void print();
+  private:
+int year,month,day;
+};
+
+Date::Date(int y, int m, int d):year(y),month(m),day(d)
+{cout << "object constructor" << endl;}
+Date::Date(const Date &d)
+{year = d.year; month = d.month; day = d.day+1;
+cout << "copy_constructor" << endl;
+}
+void Date::set(int y, int m, int d)
+{year = y; month = m; day = d;}
+void Date::print()
+{cout << year << "." << month << "." << day << endl;}
+Date func(Date day)
+{cout << "day is:";
+day.print();
+day.set(2012,1,1);
+return day;
+}
+
+int main(){
+Date d1(2012,7,10);
+cout << "d1 is:";
+d1.print(); 
+Date d2(d1);
+cout << "d2 is:";
+d2.print(); 
+Date d3(2012,7,12);
+cout << "d3 init is:";
+d3.print();
+d3 = func(d2);
+cout << "d3 update is:";
+d3.print();
+return 0;
+}
+
+[kikyoulzg@kikyoulzg cpplab]$ ./shiyan
+object constructor
+d1 is:2012.7.10
+copy_constructor
+d2 is:2012.7.11
+object constructor
+d3 init is:2012.7.12
+copy_constructor
+day is:2012.7.12 //创建形参对象day调用复制构造函数 
+copy_constructor
+d3 update is:2012.1.2 //创建临时对象调用复制函数
+
+
+
+
+
+成员初始化列表
+class CExample {
+public:
+    int a;
+    float b;
+    //构造函数初始化列表
+    CExample(): a(0),b(8.8)
+    {}
+    //构造函数内部赋值
+    CExample()
+    {
+        a=0;
+        b=8.8;
+    }
+};
+上面的例子中两个构造函数的结果是一样的。上面的构造函数（使用初始化列表的构造函数）显式的初始化类的成员；而没使用初始化列表的构造函数是对类的成员赋值，并没有进行显式的初始化。
+
+初始化和赋值对内置类型的成员没有什么大的区别，像上面的任一个构造函数都可以。对非内置类型成员变量，为了避免两次构造，推荐使用类构造函数初始化列表。但有的时候必须用带有初始化列表的构造函数：
+1.成员类型是没有默认构造函数的类。若没有提供显示初始化式，则编译器隐式使用成员类型的默认构造函数，若类没有默认构造函数，则编译器尝试使用默认构造函数将会失败。
+2.const成员或引用类型的成员。因为const对象或引用类型只能初始化，不能对他们赋值。
+
+初始化数据成员与对数据成员赋值的含义是什么？有什么区别？
+首先把数据成员按类型分类并分情况说明:
+1.内置数据类型，复合类型（指针，引用）
+    在成员初始化列表和构造函数体内进行，在性能和结果上都是一样的
+2.用户定义类型（类类型）
+    结果上相同，但是性能上存在很大的差别。因为类类型的数据成员对象在进入函数体前已经构造完成，也就是说在成员初始化列表处进行构造对象的工作，调用构造函数，在进入函数体之后，进行的是对已经构造好的类对象的赋值，又调用个拷贝赋值操作符才能完成（如果并未提供，则使用编译器提供的默认按成员赋值行为）
+
+Note:
+初始化列表的成员初始化顺序:
+    C++初始化类成员时，是按照声明的顺序初始化的，而不是按照出现在初始化列表中的顺序。
+    Example:
+class CMyClass {
+    CMyClass(int x, int y);
+    int m_x;
+    int m_y;
+};
+
+CMyClass::CMyClass(int x, int y) : m_y(y), m_x(m_y)
+{
+}
+
+你可能以为上面的代码将会首先做m_y=I，然后做m_x=m_y，最后它们有相同的值。
+但是编译器先初始化m_x，然后是m_y,，因为它们是按这样的顺序声明的。
+结果是m_x将有一个不可预测的值。
+有两种方法避免它，一个是总是按照你希望它们被初始化的顺序声明成员，第二个是，如果你决定使用初始化列表，
+总是按照它们声明的顺序罗列这些成员。这将有助于消除混淆。
+
+写代码时可以先把想实现的结果画一遍
+
+友元friend  继承 class derived_class_name:public base_class_name  
+多态(一个名字多个函数)(重载与覆盖的不同),虚函数(virtual)
+
+* 用虚函数在动态链接中实现多态
+#include <iostream>
+using namespace std;
+class base{
+public:
+    virtual void fn()
+        {
+            cout<<"in base class\n";
+        }
+};
+class sclass:public base{
+public:
+    virtual void fn()
+        {
+            cout<<"in sclass\n";
+        }
+};
+
+void test(base &x)
+{
+    x.fn();
+}
+
+int main()
+{
+    base bc;
+    sclass sc;
+    cout<<"calling test(bc)\n";
+    test(bc);
+    cout<<"calling tset(sc)\n";
+    test(sc);
+    return 0;
+}
+    
+* 用函数重载在静态编译实现(函数的)多态
+#include <iostream>
+using namespace std;
+class student
+{
+public:
+    void cala()
+        {
+            cout<<"call student::cala()\n";
+        }
+};
+
+class gstudent:public student
+{
+public:
+    void cala()
+        {
+            cout<<"call gstudent::cala()"<<endl;
+        }
+    void cala(int i)
+        {
+            cout<<"call gstudent::cala(int)"<<endl;
+        }
+};
+    
+int main()
+{
+    student s;
+    gstudent gs;
+
+    gs.cala();
+    gs.cala(5);
+    gs.student::cala();
+    return 0
+}
+
+
+* 2333
